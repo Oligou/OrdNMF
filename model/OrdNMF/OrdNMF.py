@@ -156,7 +156,10 @@ class OrdNMF():
             Sw, Sh, En, elboLoc = self.q_loc(Y,delta,np.exp(Elogw),np.exp(Elogh))
             # Elbo update
             elbo = elboLoc - theta0*s_wh + np.sum(Ew*Gy.dot(Eh)) + elboW + elboH
-            self.rate = (elbo-self.Elbo[-1])/np.abs(self.Elbo[-1])
+            if n==0:
+                self.rate = float('inf')
+            else:
+                self.rate = (elbo-self.Elbo[-1])/np.abs(self.Elbo[-1])
             if verbose:
                 print('\r\tUpdates: time=%.2f'% (time.time() - start_t))
                 print('\tRate:' + str(self.rate))

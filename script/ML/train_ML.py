@@ -50,7 +50,7 @@ max_iter = 10**5
 alpha = .3 
 
 # Ordinal
-if True:
+if False:
     for approx in [False]: 
         for K in Ks:
             for seed in Seeds:
