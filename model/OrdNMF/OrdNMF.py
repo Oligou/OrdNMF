@@ -46,7 +46,7 @@ class OrdNMF():
         self.betaW = betaW
         self.betaH = betaH
         self.score={}
-        self.classname = 'ONMF_implicit'
+        self.classname = 'OrdNMF'
         # Save arg
         saved_args_init = locals()
         saved_args_init.pop('self')
@@ -206,7 +206,8 @@ class OrdNMF():
         Sw = \sum_i E[c_{uik}]
         Sh = \sum_u E[c_{uik}]
         """
-        # Product        u,i = Y.nonzero()
+        # Product        
+        u,i = Y.nonzero()
         Lbd = np.sum(W[u,:]*H[i,:],1)
         delta_y = transform_Y(Y,delta).data
         # En
