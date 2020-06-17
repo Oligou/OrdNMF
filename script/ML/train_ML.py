@@ -11,8 +11,6 @@ sys.path.append("../../function")
 
 import os
 import cPickle as pickle
-import numpy as np
-#import matplotlib.pyplot as plt
 
 from OrdNMF import OrdNMF
 
@@ -26,10 +24,6 @@ with open('../../data/ML/ml_145_U2.00e+04_I1.19e+04_min_uc20_sc20', 'rb') as f:
     out = pickle.load(f)
     Y = out['Y_listen']
 U,I = Y.shape
-
-#hist_values = np.bincount(Y.data)
-#plt.figure()
-#plt.semilogy(np.arange(1,Y.max()+1),hist_values[1:],'.-')
 
 #%% Directory
 Y_train,Y_test = prep.divide_train_test(Y,prop_test=prop_test,seed=seed_test)
@@ -50,7 +44,7 @@ max_iter = 10**5
 alpha = .3 
 
 # Ordinal
-if False:
+if True:
     for approx in [False]: 
         for K in Ks:
             for seed in Seeds:
@@ -60,10 +54,10 @@ if False:
                           approx = approx, 
                           precision=tol, min_iter=min_iter, max_iter=max_iter,
                           save=True, save_dir=save_dir,prefix='ML', 
-                          verbose=False)
+                          verbose=True)
    
 # Binary  
-if False:
+if True:
     for approx in [True,False]: # Approx Bernoulli -> Poisson
         for K in Ks:
             for seed in Seeds:
@@ -77,7 +71,7 @@ if False:
                           save=True, save_dir=save_dir,prefix='ML_geq1', 
                           verbose=False)
         
-if False:
+if True:
     for approx in [True,False]: # Approx Bernoulli -> Poisson
         for K in Ks:
             for seed in Seeds:                

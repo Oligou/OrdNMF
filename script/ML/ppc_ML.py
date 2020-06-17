@@ -5,25 +5,19 @@
 """
 
 import os
-import glob
-import pandas as pd
 import cPickle as pickle
 import scipy.sparse as sparse
 import numpy as np
 import sys
 
 sys.path.append("../../model/OrdNMF")
-sys.path.append("../../model/dcPF")
-sys.path.append("../../model/function")
+sys.path.append("../../function")
+
+from OrdNMF import Ord_generate
 
 import preprocess_data  as prep
 
 import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 14})
-
-import matplotlib
-matplotlib.rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
-matplotlib.rc('text', usetex=True)
 
 #%%
 prop_test = 0.2
@@ -48,7 +42,7 @@ h_truth = info[1]
 
 ####################
 #%% OrdNMF
-filename = 'ML_ONMF_implicit_K150_T10_alpha0.30_0.30_beta1.00_1.00_opthyper_beta_approxN_False_tol1.0e-05_seed4'
+filename = 'ML_OrdNMF_K150_T10_alpha0.30_0.30_beta1.00_1.00_opthyper_beta_approxN_False_tol1.0e-05_seed0'
 with open(os.path.join(save_dir,filename),'rb') as f:
     model = pickle.load(f)
     
@@ -60,13 +54,8 @@ theta = model.theta
 
 #%%
 np.random.seed(0)
-Lstar = L/np.random.gamma(1,1,(U,I))
 
-Yppc = np.zeros((U,I))
-for t in theta:
-    print t
-    Yppc = Yppc + (Lstar>1./t)
-
+Yppc = Ord_generate(L,theta[:-1])
 Yppc = sparse.csr_matrix(Yppc)
 yppc = Yppc.data
 

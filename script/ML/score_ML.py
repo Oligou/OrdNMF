@@ -13,7 +13,7 @@ import sys
 
 sys.path.append("../../model/OrdNMF")
 sys.path.append("../../model/dcPF")
-sys.path.append("../../model/function")
+sys.path.append("../../function")
 
 from scipy.stats import poisson
 import preprocess_data  as prep

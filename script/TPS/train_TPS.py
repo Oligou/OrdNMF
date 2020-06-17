@@ -8,12 +8,11 @@
 import sys
 sys.path.append("../../model/OrdNMF")
 sys.path.append("../../model/dcPF")
-sys.path.append("../../model/function")
+sys.path.append("../../function")
 
 import os
 import cPickle as pickle
 import numpy as np
-#import matplotlib.pyplot as plt
 
 from OrdNMF import OrdNMF
 from dcpf_Log import dcpf_Log
@@ -33,10 +32,6 @@ U,I = Y.shape
 threshold = np.array([[0,1,2,5,10,20,50,100,200,500]])
 compare = Y.data[:,np.newaxis]>threshold
 Y.data = np.sum(compare,1)
-
-#hist_values = np.bincount(Y.data)
-#plt.figure()
-#plt.semilogy(np.arange(1,Y.max()+1),hist_values[1:],'.-')
 
 #%% Directory
 Y_train,Y_test = prep.divide_train_test(Y,prop_test=prop_test,seed=seed_test)

@@ -28,7 +28,6 @@ import os
 import time
 import cPickle as pickle
 import sys
-import pandas as pd
 
 class OrdNMF():
     def __init__(self, K,
@@ -61,7 +60,7 @@ class OrdNMF():
             save=True, save_dir='', prefix=None, suffix=None):
         """
         ------- INPUT VARIABLES -------
-        Y (sparse matrix of size UxI) - Observed data, values from 0 to T
+        Y (sparse matrix of size UxI, type:int) - Observed data, values from 0 to T
         T - maximum value in Y
         
         ------- OPTIONAL VARIABLES -------
@@ -284,6 +283,14 @@ def transform_Y(Y,values): # 1->values[1]; 2->values[2]; ...
         transformation.data[Y.data==l] = values[l]
     return transformation
 
+def Ord_generate(L, theta):
+    Y = np.zeros(L.shape)
+    X = L/np.random.gamma(1,1,L.shape)
+    for t in theta:
+        Y = Y + (X>1./t)
+    Y = Y.astype(int)
+    return Y
+    
 def _writeline_and_time(s):
     sys.stdout.write(s)
     sys.stdout.flush()
