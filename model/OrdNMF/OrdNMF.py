@@ -107,13 +107,13 @@ class OrdNMF():
         # Shape
         U,I = Y.shape
         u,i = Y.nonzero()
+        y = Y.data
         # Init - matrix companion
-        #delta = np.ones(T+1); delta[0]=0;
-        delta = self.init_delta(Y)
+        delta = self.init_delta(Y)        #delta = np.ones(T+1); delta[0]=0;
         H = (np.triu(np.ones((T+1,T+1))).dot(delta[:,np.newaxis]))[:,0] 
         theta0 = H[0]
         G = theta0 - H
-        Gy = transform_Y(Y,G)
+        Gy = sparse.csr_matrix((G[y],(u,i)), shape=(U,I))
         # Init - W & H
         Ew = np.random.gamma(1.,1.,(U,self.K))
         Eh = np.random.gamma(1.,1.,(I,self.K))
@@ -144,7 +144,7 @@ class OrdNMF():
             H = (np.triu(np.ones((T+1,T+1))).dot(delta[:,np.newaxis]))[:,0] 
             theta0 = H[0]
             G = theta0 - H
-            Gy = transform_Y(Y,G)
+            Gy = sparse.csr_matrix((G[y],(u,i)), shape=(U,I))
             # Global updates
             Ew, Elogw, elboW = q_Gamma(self.alphaW , Sw, 
                                        self.betaW, theta0*np.sum(Eh,0,keepdims=True) - Gy.dot(Eh))
@@ -211,10 +211,10 @@ class OrdNMF():
         # Product        
         u,i = Y.nonzero()
         Lbd = np.sum(W[u,:]*H[i,:],1)
-        delta_y = transform_Y(Y,delta).data
+        delta_y = delta[Y.data]
         # En
         if self.approx == False:
-            en = Lbd*delta_y/(1.-np.exp(-Lbd*delta_y))#delta_y/(1.-np.exp(-Lbd*delta_y))
+            en = Lbd*delta_y/(1.-np.exp(-Lbd*delta_y)) #delta_y/(1.-np.exp(-Lbd*delta_y))
             en[np.isnan(en)] = 1.
         else :
             en = np.ones_like(Lbd)
@@ -275,13 +275,6 @@ def q_Gamma(shape, _shape, rate, _rate):
     elbo = gamma_elbo(shape, rate, E, Elog)
     elbo = elbo.sum() + entropy.sum()
     return E, Elog, elbo
-
-def transform_Y(Y,values): # 1->values[1]; 2->values[2]; ...
-    transformation = Y.copy()
-    transformation = transformation.astype(float)
-    for l in range(1,len(values)):
-        transformation.data[Y.data==l] = values[l]
-    return transformation
 
 def Ord_generate(L, theta):
     Y = np.zeros(L.shape)
