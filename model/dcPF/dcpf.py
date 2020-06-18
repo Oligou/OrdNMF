@@ -141,7 +141,10 @@ class dcpf():
             s_en = en.sum()
             # ELBO
             elbo = elboN - self.t*s_wh + elboW + elboH
-            self.rate = (elbo-self.Elbo[-1])/np.abs(self.Elbo[-1])
+            if n==0:
+                self.rate=float('inf')
+            else:
+                self.rate = (elbo-self.Elbo[-1])/np.abs(self.Elbo[-1])
             if verbose:
                 print('\r\tUpdates: time=%.2f'% (time.time() - start_t))
                 print('\tRate:' + str(self.rate))

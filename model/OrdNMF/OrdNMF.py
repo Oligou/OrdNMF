@@ -109,7 +109,7 @@ class OrdNMF():
         u,i = Y.nonzero()
         y = Y.data
         # Init - matrix companion
-        delta = self.init_delta(Y)        #delta = np.ones(T+1); delta[0]=0;
+        delta = self.init_delta(Y)  #delta = np.ones(T+1); delta[0]=0;
         H = (np.triu(np.ones((T+1,T+1))).dot(delta[:,np.newaxis]))[:,0] 
         theta0 = H[0]
         G = theta0 - H
